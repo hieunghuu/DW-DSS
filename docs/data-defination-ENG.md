@@ -7,6 +7,7 @@
 - **URL**: https://www.kaggle.com/c/walmart-recruiting-store-sales-forecasting/data  
 - **Data type**: Structured data (CSV files)  
 - **Domain**: Retail / Sales / Decision Support Systems  
+- **Date**: from 2010-02-05 to 2012-10-26
 
 ---
 
