@@ -1,1 +1,4 @@
 data-source/*
+postgres/data/*
+
+.git
