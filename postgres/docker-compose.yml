@@ -1,7 +1,7 @@
 version: '3.5'
 volumes:
     postgres: {}
-    pgadmin: {}
+    # pgadmin: {}
 services:
   postgres:
     container_name: postgres_container
@@ -17,21 +17,20 @@ services:
     networks:
       - postgres
     restart: unless-stopped
-  
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4
-    env_file:
-       - .env
-    volumes:
-       - ./data-pgadmin:/var/lib/pgadmin
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    networks:
-      - postgres
-    restart: unless-stopped
-
-networks:
-  postgres:
-    driver: bridge
-
+#   
+#   pgadmin:
+#     container_name: pgadmin_container
+#     image: dpage/pgadmin4
+#     env_file:
+#        - .env
+#     volumes:
+#        - ./data-pgadmin:/var/lib/pgadmin
+#     ports:
+#       - "${PGADMIN_PORT:-5050}:80"
+#     networks:
+#       - postgres
+#     restart: unless-stopped
+# 
+# networks:
+#   postgres:
+#     driver: bridge

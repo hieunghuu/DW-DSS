@@ -1,4 +1,7 @@
-data-source/*
-postgres/data/*
+data-source
+postgres/data-pgadmin
+postgres/data*
 
 .git
+.venv
+__pycache__/
