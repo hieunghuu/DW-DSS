@@ -4,6 +4,7 @@
 -- ==============================================================================
 
 -- Table: silver.stores (SCD Type 2)
+
 CREATE TABLE silver.stores (
     store_key SERIAL PRIMARY KEY,
     store_id INTEGER NOT NULL,
@@ -24,17 +25,18 @@ CREATE INDEX idx_silver_stores_current ON silver.stores (store_id, is_current) W
 CREATE INDEX idx_silver_stores_eff_date ON silver.stores (effective_date);
 
 -- Table: silver.economic_features
+
 CREATE TABLE silver.economic_features (
     feature_id SERIAL PRIMARY KEY,
     store_id INTEGER NOT NULL,
     date DATE NOT NULL,
     temperature NUMERIC(5,2),
     fuel_price NUMERIC(5,3) CHECK (fuel_price >= 0),
-    CASE WHEN markdown1 = 'NaN'::numeric OR markdown1 IS NULL THEN 0 ELSE markdown1 END,
-    CASE WHEN markdown2 = 'NaN'::numeric OR markdown2 IS NULL THEN 0 ELSE markdown2 END,
-    CASE WHEN markdown3 = 'NaN'::numeric OR markdown3 IS NULL THEN 0 ELSE markdown3 END,
-    CASE WHEN markdown4 = 'NaN'::numeric OR markdown4 IS NULL THEN 0 ELSE markdown4 END,
-    CASE WHEN markdown5 = 'NaN'::numeric OR markdown5 IS NULL THEN 0 ELSE markdown5 END,
+    markdown1 NUMERIC(12,2) DEFAULT 0,
+    markdown2 NUMERIC(12,2) DEFAULT 0,
+    markdown3 NUMERIC(12,2) DEFAULT 0,
+    markdown4 NUMERIC(12,2) DEFAULT 0,
+    markdown5 NUMERIC(12,2) DEFAULT 0,
     cpi NUMERIC(10,6) CHECK (cpi > 0),
     unemployment NUMERIC(5,3) CHECK (unemployment >= 0 AND unemployment <= 100),
     is_holiday BOOLEAN DEFAULT FALSE,

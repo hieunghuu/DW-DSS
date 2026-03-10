@@ -148,6 +148,36 @@ transform_silver_sales = SQLExecuteQueryOperator(
     ''',
     dag=dag,
 )
+handle_null_markdown = SQLExecuteQueryOperator(
+    task_id='handle_null_markdown',
+    conn_id='walmart_dwh',
+    sql='''
+        sql-- Update Silver layer to replace NaN with 0
+        UPDATE silver.economic_features
+        SET 
+            markdown1 = CASE WHEN markdown1 = 'NaN'::numeric THEN 0 ELSE markdown1 END,
+            markdown2 = CASE WHEN markdown2 = 'NaN'::numeric THEN 0 ELSE markdown2 END,
+            markdown3 = CASE WHEN markdown3 = 'NaN'::numeric THEN 0 ELSE markdown3 END,
+            markdown4 = CASE WHEN markdown4 = 'NaN'::numeric THEN 0 ELSE markdown4 END,
+            markdown5 = CASE WHEN markdown5 = 'NaN'::numeric THEN 0 ELSE markdown5 END
+        WHERE 
+            markdown1 = 'NaN'::numeric 
+            OR markdown2 = 'NaN'::numeric 
+            OR markdown3 = 'NaN'::numeric 
+            OR markdown4 = 'NaN'::numeric 
+            OR markdown5 = 'NaN'::numeric;
 
+        -- Verify the fix
+        SELECT 
+            COUNT(*) as total_rows,
+            COUNT(*) FILTER (WHERE markdown1 = 'NaN'::numeric) as nan_markdown1,
+            COUNT(*) FILTER (WHERE markdown2 = 'NaN'::numeric) as nan_markdown2,
+            COUNT(*) FILTER (WHERE markdown3 = 'NaN'::numeric) as nan_markdown3,
+            COUNT(*) FILTER (WHERE markdown4 = 'NaN'::numeric) as nan_markdown4,
+            COUNT(*) FILTER (WHERE markdown5 = 'NaN'::numeric) as nan_markdown5
+        FROM silver.economic_features;
+    ''',
+    dag=dag,
+)
 # Task dependencies
-transform_silver_stores >> transform_silver_features >> transform_silver_sales
+transform_silver_stores >> transform_silver_features >> transform_silver_sales >> handle_null_markdown

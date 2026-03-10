@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  ml_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: walmart_ml_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./models:/app/models        # persist trained model files
+      - ../dataset:/app/data            # CSV data mount
+    networks:
+      - walmart_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  walmart_net:
+    driver: bridge

@@ -11,7 +11,7 @@ services:
     environment:
       PGDATA: /data/postgres
     volumes:
-       - ./data:/data/postgres
+       - postgres:/data/postgres
     ports:
       - "15432:5432"
     networks:
@@ -31,6 +31,6 @@ services:
 #       - postgres
 #     restart: unless-stopped
 # 
-# networks:
-#   postgres:
-#     driver: bridge
+networks:
+  postgres:
+    driver: bridge
