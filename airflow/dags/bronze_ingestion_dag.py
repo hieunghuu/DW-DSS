@@ -1,5 +1,5 @@
 from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from datetime import datetime, timedelta
 import pandas as pd
@@ -30,7 +30,7 @@ def ingest_stores(**context):
     hook = PostgresHook(postgres_conn_id='walmart_dwh')
     
     # Read CSV
-    df = pd.read_csv('/mnt/d/MasterCourseHCMT/semester_20252/CO5113-DW-DSS/proj/dataset/stores.csv')
+    df = pd.read_csv('/opt/airflow/dataset/stores.csv')
     
     # Add metadata
     df['ingestion_timestamp'] = datetime.now()
@@ -55,7 +55,7 @@ def ingest_features(**context):
     """Ingest features.csv into features table"""
     hook = PostgresHook(postgres_conn_id='walmart_dwh')
     
-    df = pd.read_csv('/mnt/d/MasterCourseHCMT/semester_20252/CO5113-DW-DSS/proj/dataset/features.csv')
+    df = pd.read_csv('/opt/airflow/dataset/features.csv')
     df['ingestion_timestamp'] = datetime.now()
     df['source_file'] = 'features.csv'
     df['row_hash'] = df.apply(
@@ -81,7 +81,7 @@ def ingest_sales(**context):
     chunk_size = 10000
     total_rows = 0
     
-    for chunk in pd.read_csv('/mnt/d/MasterCourseHCMT/semester_20252/CO5113-DW-DSS/proj/dataset/train.csv', chunksize=chunk_size):
+    for chunk in pd.read_csv('/opt/airflow/dataset/train.csv', chunksize=chunk_size):
         chunk['ingestion_timestamp'] = datetime.now()
         chunk['source_file'] = 'train.csv'
         chunk['row_hash'] = chunk.apply(

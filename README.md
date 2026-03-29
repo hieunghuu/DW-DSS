@@ -89,7 +89,5 @@ When testing or re-running ETL, update or point the ingestion DAGs to the files 
 	- `docs/DW-datadefination.md` — data warehouse definitions and schema notes
 
 Refer to the `docs/` folder for column definitions, business rules, and additional project notes before running transformations or using datasets for modelling.
-
-## Contact / Authors
 ---
 

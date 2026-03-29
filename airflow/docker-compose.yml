@@ -10,7 +10,7 @@ x-airflow-common:
     args:
       AIRFLOW_IMAGE_NAME: ${AIRFLOW_IMAGE_NAME:-apache/airflow:slim-3.1.7}
   env_file:
-    - ./.env
+    - .env
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -28,11 +28,17 @@ x-airflow-common:
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
     - ./config:/opt/airflow/config
+    - ./simple_auth_manager_passwords.json:/opt/airflow/simple_auth_manager_passwords.json:ro
+    - ../dataset:/opt/airflow/dataset
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
     postgres:
       condition: service_healthy
+  networks:
+      default: 
+        aliases:
+          - postgres_postgres 
 
 services:
   postgres:
@@ -48,6 +54,10 @@ services:
       interval: 5s
       retries: 5
     restart: always
+    networks:
+      default: 
+        aliases:
+          - postgres_postgres 
 
   airflow-apiserver:
     <<: *airflow-common
@@ -194,8 +204,7 @@ services:
         ls -la /opt/airflow/{logs,dags,plugins,config}
         echo
         echo "Running airflow db migrate..."
-        /entrypoint airflow db migrate
-
+        # /entrypoint airflow db migrate
     # yamllint enable rule:line-length
     environment:
       <<: *airflow-common-env
@@ -224,3 +233,7 @@ services:
 
 volumes:
   postgres-db-volume:
+networks:
+  default:
+    external: true
+    name: postgres_postgres

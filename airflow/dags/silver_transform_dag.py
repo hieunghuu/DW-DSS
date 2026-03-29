@@ -34,7 +34,7 @@ transform_silver_stores = SQLExecuteQueryOperator(
             TRUE AS is_current
         FROM bronze.kaggle_stores
         WHERE ingestion_timestamp >= CURRENT_DATE - INTERVAL '1 day'
-        ON CONFLICT (store_id, effective_date) 
+        ON CONFLICT (store_id, version) 
         DO UPDATE SET
             store_type = EXCLUDED.store_type,
             store_size = EXCLUDED.store_size,
@@ -152,7 +152,7 @@ handle_null_markdown = SQLExecuteQueryOperator(
     task_id='handle_null_markdown',
     conn_id='walmart_dwh',
     sql='''
-        sql-- Update Silver layer to replace NaN with 0
+        -- Update Silver layer to replace NaN with 0
         UPDATE silver.economic_features
         SET 
             markdown1 = CASE WHEN markdown1 = 'NaN'::numeric THEN 0 ELSE markdown1 END,

@@ -3,5 +3,5 @@ numpy
 psycopg2-binary
 apache-airflow-providers-postgres
 apache-airflow-providers-common-sql
-
+apache-airflow-providers-standard
 
